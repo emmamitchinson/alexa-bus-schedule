@@ -1,7 +1,7 @@
 {
   "intents": [
     {
-      "intent": "GetNextMetrolinkIntent",
+      "intent": "GetNextMetrolinkFromAIntent",
       "slots": [
         {
             "name": "deansgate-castlefield",
@@ -82,6 +82,171 @@
         {
             "name": "eccles",
             "type": "metrostop"
+        }
+      ]
+    },
+    {
+      "intent": "GetNextMetrolinkFromAtoBIntent",
+      "slots": [
+        {
+            "name": "deansgate-castlefield",
+            "type": "metrostopA"
+        },
+        {
+            "name": "st peter's square",
+            "type": "metrostopA"
+        },
+        {
+            "name": "piccadilly gardens",
+            "type": "metrostopA"
+        },
+        {
+            "name": "piccadilly",
+            "type": "metrostopA"
+        },
+        {
+            "name": "st werburgh's road",
+            "type": "metrostopA"
+        },
+        {
+            "name": "chorlton",
+            "type": "metrostopA"
+        },
+        {
+            "name": "firswood",
+            "type": "metrostopA"
+        },
+        {
+            "name": "old trafford",
+            "type": "metrostopA"
+        },
+        {
+            "name": "trafford bar",
+            "type": "metrostopA"
+        },
+        {
+            "name": "cornbrook",
+            "type": "metrostopA"
+        },
+        {
+            "name": "pomona",
+            "type": "metrostopA"
+        },
+        {
+            "name": "exchange quay",
+            "type": "metrostopA"
+        },
+        {
+            "name": "salford quays",
+            "type": "metrostopA"
+        },
+        {
+            "name": "anchorage",
+            "type": "metrostopA"
+        },
+        {
+            "name": "harbour city",
+            "type": "metrostopA"
+        },
+        {
+            "name": "broadway",
+            "type": "metrostopA"
+        },
+        {
+            "name": "langworthy",
+            "type": "metrostopA"
+        },
+        {
+            "name": "weaste",
+            "type": "metrostopA"
+        },
+        {
+            "name": "ladywell",
+            "type": "metrostopA"
+        },
+        {
+            "name": "eccles",
+            "type": "metrostopA"
+        },
+        {
+            "name": "deansgate-castlefield",
+            "type": "metrostopB"
+        },
+        {
+            "name": "st peter's square",
+            "type": "metrostopB"
+        },
+        {
+            "name": "piccadilly gardens",
+            "type": "metrostopB"
+        },
+        {
+            "name": "piccadilly",
+            "type": "metrostopB"
+        },
+        {
+            "name": "st werburgh's road",
+            "type": "metrostopB"
+        },
+        {
+            "name": "chorlton",
+            "type": "metrostopB"
+        },
+        {
+            "name": "firswood",
+            "type": "metrostopB"
+        },
+        {
+            "name": "old trafford",
+            "type": "metrostopB"
+        },
+        {
+            "name": "trafford bar",
+            "type": "metrostopB"
+        },
+        {
+            "name": "cornbrook",
+            "type": "metrostopB"
+        },
+        {
+            "name": "pomona",
+            "type": "metrostopB"
+        },
+        {
+            "name": "exchange quay",
+            "type": "metrostopB"
+        },
+        {
+            "name": "salford quays",
+            "type": "metrostopB"
+        },
+        {
+            "name": "anchorage",
+            "type": "metrostopB"
+        },
+        {
+            "name": "harbour city",
+            "type": "metrostopB"
+        },
+        {
+            "name": "broadway",
+            "type": "metrostopB"
+        },
+        {
+            "name": "langworthy",
+            "type": "metrostopB"
+        },
+        {
+            "name": "weaste",
+            "type": "metrostopB"
+        },
+        {
+            "name": "ladywell",
+            "type": "metrostopB"
+        },
+        {
+            "name": "eccles",
+            "type": "metrostopB"
         }
       ]
     },

@@ -1,5 +1,5 @@
-{
-    "pink": [
+[ 
+    [
         "piccadilly",
         "piccadilly gardens",
         "st peter's square",
@@ -16,7 +16,7 @@
         "ladywell",
         "eccles"
     ],
-    "purple": [
+    [
         "deansgate-castlefield",
         "cornbrook",
         "trafford bar",
@@ -24,4 +24,4 @@
         "chorlton",
         "st werbeurgh's road"
     ]
-}
+]

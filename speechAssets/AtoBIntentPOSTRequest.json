@@ -1,0 +1,48 @@
+{
+    "journeyPlanningRequirements":{
+        "locationRequirements":{
+            "startLocation":{
+                "latLong":"53.4428,-2.27366",
+                "description":"Chorlton (Manchester Metrolink), on Wilbraham Road, Chorlton [mantpjdm]"
+            },
+            "endLocation":{
+                "latLong":"53.47482,-2.29488",
+                "description":"Broadway (Manchester Metrolink), on Off Broadway, Broadway [mantpjpd]"
+            }
+        },
+        "schedulingRequirements":{
+            "dateAndTime":"2017-05-19T11:11",
+            "timeQualifier":"LEAVE_AFTER"
+        },
+        "timeout":30,
+        "realTimeMode":"FULL"
+    },
+    "journeyPlanningPreferences":{
+        "transportModes":["TRAM"],
+        "aveWalkingSpeed":4.8,
+        "aveCyclingSpeed":16,
+        "minimumConnectionTime":25,
+        "connectionPreferences":{
+            "maxNoOfChanges":"7",
+            "maxConnectionWalkDistance":50
+        },
+        "routingPreferences":{
+            "primaryRoutingPriority":"DURATION",
+            "avoidMotorways":false,
+            "avoidCityCentre":false
+        },
+        "parkingPreferences":{
+            "carParkRequired":false,
+            "cycleParkRequired":false,
+            "chargingPointRequired":false
+        },
+        "avoidPeakTimes":false,
+        "stepFreeAccess":false,
+        "accessibilityUser":false,
+        "maxGradient":0,
+        "segregatedWalkCycleRoutes":false,
+        "showActiveTravelFacililities":false,
+        "showInfrastructure":false,
+        "showWeatherForecast":true
+    }
+}

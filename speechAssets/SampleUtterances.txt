@@ -1,5 +1,7 @@
-GetNextMetrolinkIntent get next tram from {metrostop}
-GetNextMetrolinkIntent get next scheduled tram from {metrostop}
+GetNextMetrolinkFromAIntent get next tram from {metrostop}
+GetNextMetrolinkFromAIntent get next scheduled tram from {metrostop}
+GetNextMetrolinkFromAtoBIntent get next tram from {metrostopA} to {metrostopB}
+GetNextMetrolinkFromAtoBIntent get next scheduled tram from {metrostopA} to {metrostopB}
 
 HelpIntent help
 HelpIntent help me
