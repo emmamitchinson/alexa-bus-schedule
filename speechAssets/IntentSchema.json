@@ -1,0 +1,93 @@
+{
+  "intents": [
+    {
+      "intent": "GetNextMetrolinkIntent",
+      "slots": [
+        {
+            "name": "deansgate-castlefield",
+            "type": "metrostop"
+        },
+        {
+            "name": "st peter's square",
+            "type": "metrostop"
+        },
+        {
+            "name": "piccadilly gardens",
+            "type": "metrostop"
+        },
+        {
+            "name": "piccadilly",
+            "type": "metrostop"
+        },
+        {
+            "name": "st werburgh's road",
+            "type": "metrostop"
+        },
+        {
+            "name": "chorlton",
+            "type": "metrostop"
+        },
+        {
+            "name": "firswood",
+            "type": "metrostop"
+        },
+        {
+            "name": "old trafford",
+            "type": "metrostop"
+        },
+        {
+            "name": "trafford bar",
+            "type": "metrostop"
+        },
+        {
+            "name": "cornbrook",
+            "type": "metrostop"
+        },
+        {
+            "name": "pomona",
+            "type": "metrostop"
+        },
+        {
+            "name": "exchange quay",
+            "type": "metrostop"
+        },
+        {
+            "name": "salford quays",
+            "type": "metrostop"
+        },
+        {
+            "name": "anchorage",
+            "type": "metrostop"
+        },
+        {
+            "name": "harbour city",
+            "type": "metrostop"
+        },
+        {
+            "name": "broadway",
+            "type": "metrostop"
+        },
+        {
+            "name": "langworthy",
+            "type": "metrostop"
+        },
+        {
+            "name": "weaste",
+            "type": "metrostop"
+        },
+        {
+            "name": "ladywell",
+            "type": "metrostop"
+        },
+        {
+            "name": "eccles",
+            "type": "metrostop"
+        }
+      ]
+    },
+    {
+      "intent": "HelpIntent",
+      "slots": []
+    }
+  ]
+}
