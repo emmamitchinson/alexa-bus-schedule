@@ -85,12 +85,32 @@
         "9400zzmawst1",
         "9400zzmawst2"
     ],
-     "ladywell": [
+        "ladywell": [
         "9400zzmaldy1",
         "9400zzmaldy2"
     ], 
     "eccles": [
         "9400zzmaecc1",
         "9400zzmaecc2"
-    ]
+    ],
+    "heaton park": [ "9400ZZMAHEA1", "9400ZZMAHEA2" ],
+    "mosley street": ["9400ZZMAMOS1", "9400ZZMAMOS2"],
+    "prestwich": [ "9400ZZMAPWC1", "9400ZZMAPWC2" ],
+    "radcliffe": [ "9400ZZMARAD1", "9400ZZMARAD2" ],
+    "stretford": [ "9400ZZMASFD1", "9400ZZMASFD2" ],
+    "shudehill": [ "9400ZZMASHU1", "9400ZZMASHU2" ],
+    "sale": [ "9400ZZMASLE1", "9400ZZMASLE2" ],
+    "timperley": [ "9400ZZMATIM1", "9400ZZMATIM2" ],
+    "victoria": ["9400ZZMAVIC1", "9400ZZMAVIC2"],
+    "whitefield": [ "9400ZZMAWFD1", "9400ZZMAWFD2" ],
+    "altrincham": ["9400ZZMAALT1", "9400ZZMAALT2"],
+    "brooklands": [ "9400ZZMABKS1", "9400ZZMABKS2" ],
+    "bowker vale": [ "9400ZZMABOW1", "9400ZZMABOW2" ],
+    "bury": ["9400ZZMABUR1", "9400ZZMABUR2"],
+    "crumpsall": [ "9400ZZMACRU1", "9400ZZMACRU2" ],
+    "woodlands road": [ "9400ZZMAWDS1", "9400ZZMAWDS2" ],
+    "navigation road": [ "9400ZZMANAV1", "9400ZZMANAV2" ],
+    "market street": ["9400ZZMAMKT1","9400ZZMAMKT2"],
+    "dane road": [ "9400ZZMADNE1", "9400ZZMADNE2" ],
+    "besses o' th' barn": ["9400ZZMABOB1", "9400ZZMABOB2"]
 }
