@@ -4,7 +4,7 @@ An Amazon Echo Skill that uses the TfGM Metrolink API to fetch the next trams fo
 ## Requirements
 Node 6 or above.
 
-## Usage
+## Usage/Testing
 `npm install`  
 `alexa-skill-test`
 
