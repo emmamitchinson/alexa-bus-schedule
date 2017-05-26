@@ -10,7 +10,7 @@ var Promise         = require("bluebird");
  */
 
 var AlexaSkill      = require("./AlexaSkill")
-var metrolinkStops  = require("../speechAssets/metrolinkStops-2.json");
+var metrolinkStops  = require("../speechAssets/metrolinkStops.json");
 var metrolinkLines  = require("../speechAssets/metrolinkLines.json");
 var POSTRequestData = require("../speechAssets/AtoBIntentPOSTRequest.json");
 
@@ -48,10 +48,6 @@ var cleanArray = function(actual) {
 * Processes
 */
 
-/**
- * NextMetrolinkFromA
- */
-
   var sendMetrolinkGETRequest = function(stopId) {
     return new Promise(function(resolve, reject) {
       var xhttp = new XMLHttpRequest();
@@ -68,6 +64,29 @@ var cleanArray = function(actual) {
       xhttp.send();
     });
   }
+    var filterResponses = function(destinationName, serverResponses) {
+    var filterResponses = [];
+
+    for (i = 0; i < serverResponses.length; i++) {
+      var tramInfo = serverResponses[i].fboard_result.fboard_events;
+      var finalStopOnLine = tramInfo[i].departing_to.toLowerCase();
+
+      for (j = 0; j < metrolinkLines.length; j++) {
+        console.log(metrolinkLines[j]);
+        if (metrolinkLines[j].includes(destinationName, finalStopOnLine)) {
+          console.log(finalStopOnLine , destinationName);
+          filterResponses.push(serverResponses[i]);
+          break;
+        }
+      }
+    }
+
+    return filterResponses;
+  }
+
+/**
+ * NextMetrolinkFromA
+ */
 
   var handleNextMetrolinkFromARequest = function(serverResponses, alexaResponse) {
     var cardText = "";
@@ -96,25 +115,26 @@ var cleanArray = function(actual) {
     return alexaResponse.tellWithCard(cardText, "", cardText);
   };
 
-  var filterResponses = function(destinationName, serverResponses) {
-    var filterResponses = [];
+  var processGetNextMetrolinkFromAIntent = function(intent, session, response) {
+    var stopId = getIdByPrompt(intent.slots.metrostop);
 
-    for (i = 0; i < serverResponses.length; i++) {
-      var tramInfo = serverResponses[i].fboard_result.fboard_events;
-      var finalStopOnLine = tramInfo[i].departing_to.toLowerCase();
-
-      for (j = 0; j < metrolinkLines.length; j++) {
-        console.log(metrolinkLines[j]);
-        if (metrolinkLines[j].includes(destinationName, finalStopOnLine)) {
-          console.log(finalStopOnLine , destinationName);
-          filterResponses.push(serverResponses[i]);
-          break;
-        }
+    if (stopId) {
+      var promises = [];
+      for (i = 1; i <= 4; i++) {
+        var platformId = stopId + i;
+        promises.push(sendMetrolinkGETRequest(platformId));
       }
+      Promise.all(promises).then((requests) => {
+          handleNextMetrolinkFromARequest(requests, response);
+      });
+    } else {
+      response.tellWithCard("That metro stop no exist.", "", "That metro stop no exist.");
     }
-
-    return filterResponses;
   }
+
+/**
+ * NextMetrolinkFromAtoB
+ */
 
   var handleNextMetrolinkFromAtoBRequest = function(intent, serverResponses, alexaResponse) {
     var cardText = "";
@@ -147,23 +167,6 @@ var cleanArray = function(actual) {
     
     return alexaResponse.tellWithCard(cardText, "", cardText);
   };
-
-  var processGetNextMetrolinkFromAIntent = function(intent, session, response) {
-    var stopId = getIdByPrompt(intent.slots.metrostop);
-
-    if (stopId) {
-      var promises = [];
-      for (i = 1; i <= 4; i++) {
-        var platformId = stopId + i;
-        promises.push(sendMetrolinkGETRequest(platformId));
-      }
-      Promise.all(promises).then((requests) => {
-          handleNextMetrolinkFromARequest(requests, response);
-      });
-    } else {
-      response.tellWithCard("That metro stop no exist.", "", "That metro stop no exist.");
-    }
-  }
 
   var processGetNextMetrolinkFromAtoBIntent = function(intent, session, response) {
     var departureStopId = getIdByPrompt(intent.slots.metrostopA);
@@ -245,14 +248,11 @@ MetrolinkSchedule.prototype = Object.create(AlexaSkill.prototype);
 MetrolinkSchedule.prototype.constructor = MetrolinkSchedule;
 
 MetrolinkSchedule.prototype.eventHandlers.onSessionStarted = function(sessionStartedRequest, session){
-  // What happens when the session starts? Optional
   console.log("onSessionStarted requestId: " + sessionStartedRequest.requestId
       + ", sessionId: " + session.sessionId);
 };
 
 MetrolinkSchedule.prototype.eventHandlers.onLaunch = function(launchRequest, session, response){
-  // This is when they launch the skill but don"t specify what they want. Prompt
-  // them for their Metrolink stop
   var output = "Welcome to Metrolink Schedule. " +
     "Say the name of a Metrolink stop to get how far the next Metrolink is away.";
 
