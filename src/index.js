@@ -48,41 +48,42 @@ var cleanArray = function(actual) {
 * Processes
 */
 
-  var sendMetrolinkGETRequest = function(stopId) {
-    return new Promise(function(resolve, reject) {
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("GET", "https://api.my.tfgm.com/proxy/execute?cid=optis:1&rid=metro_tram_board_v2&atco=" + stopId, true);
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4) {
-          var nextTramsAsJSON = JSON.parse(xhttp.responseText);
-          if (nextTramsAsJSON.msptl_response.server_response) {
-            return resolve(nextTramsAsJSON.msptl_response.server_response);
-          }
-          return resolve(null);
+var sendMetrolinkGETRequest = function(stopId) {
+  return new Promise(function(resolve, reject) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "https://api.my.tfgm.com/proxy/execute?cid=optis:1&rid=metro_tram_board_v2&atco=" + stopId, true);
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4) {
+        var nextTramsAsJSON = JSON.parse(xhttp.responseText);
+        if (nextTramsAsJSON.msptl_response.server_response) {
+          return resolve(nextTramsAsJSON.msptl_response.server_response);
         }
-      }
-      xhttp.send();
-    });
-  }
-    var filterResponses = function(destinationName, serverResponses) {
-    var filterResponses = [];
-
-    for (i = 0; i < serverResponses.length; i++) {
-      var tramInfo = serverResponses[i].fboard_result.fboard_events;
-      var finalStopOnLine = tramInfo[i].departing_to.toLowerCase();
-
-      for (j = 0; j < metrolinkLines.length; j++) {
-        console.log(metrolinkLines[j]);
-        if (metrolinkLines[j].includes(destinationName, finalStopOnLine)) {
-          console.log(finalStopOnLine , destinationName);
-          filterResponses.push(serverResponses[i]);
-          break;
-        }
+        return resolve(null);
       }
     }
+    xhttp.send();
+  });
+}
 
-    return filterResponses;
+var filterResponses = function(destinationName, serverResponses) {
+  var filterResponses = [];
+
+  for (i = 0; i < serverResponses.length; i++) {
+    var tramInfo = serverResponses[i].fboard_result.fboard_events;
+    var finalStopOnLine = tramInfo[i].departing_to.toLowerCase();
+
+    for (j = 0; j < metrolinkLines.length; j++) {
+      console.log(metrolinkLines[j]);
+      if (metrolinkLines[j].includes(destinationName, finalStopOnLine)) {
+        console.log(finalStopOnLine , destinationName);
+        filterResponses.push(serverResponses[i]);
+        break;
+      }
+    }
   }
+
+  return filterResponses;
+}
 
 /**
  * NextMetrolinkFromA
@@ -213,36 +214,35 @@ var cleanArray = function(actual) {
   var handleNextMetrolinkFromAtoBRequest = function(serverResponses, alexaResponse) {
     console.log(serverResponses);
     return alexaResponse.tellWithCard(serverResponses, "", serverResponses);
-  };
+  }
 
   var processGetNextMetrolinkFromAtoBIntent = function(intent, session, response) {
-    var departureStopIds = getIdsByPrompt(intent.slots.metrostopA);
-    var destinationStopIds = getIdsByPrompt(intent.slots.metrostopB);
+      var departureStopIds = getIdsByPrompt(intent.slots.metrostopA);
+      var destinationStopIds = getIdsByPrompt(intent.slots.metrostopB);
 
-    if (departureStopIds && destinationStopIds) {
-      var promises = [];
-      departureStopIds.forEach(function(departureStopId) {
-        destinationStopIds.forEach(function(destinationStopId) {
-          promises.push(sendMetrolinkPOSTRequest(departureStopId, destinationStopId));
-        }, this); 
-      }, this);
-      Promise.all(promises).then((requests) => {
-          handleNextMetrolinkFromAtoBRequest(requests, response);
-      });
-    } else {
-      response.tellWithCard("That metro stop no exist.", "", "That metro stop no exist.");
+      if (departureStopIds && destinationStopIds) {
+        var promises = [];
+        departureStopIds.forEach(function(departureStopId) {
+          destinationStopIds.forEach(function(destinationStopId) {
+            promises.push(sendMetrolinkPOSTRequest(departureStopId, destinationStopId));
+          }, this); 
+        }, this);
+        Promise.all(promises).then((requests) => {
+            handleNextMetrolinkFromAtoBRequest(requests, response);
+        });
+      } else {
+        response.tellWithCard("That metro stop no exist.", "", "That metro stop no exist.");
+      }
     }
-  }
- */
-
-
-var MetrolinkSchedule = function(){
-  AlexaSkill.call(this, APP_ID);
-};
+*/
 
 /**
 * MetrolinkSchedule
 */
+
+var MetrolinkSchedule = function(){
+  AlexaSkill.call(this, APP_ID);
+};
 
 MetrolinkSchedule.prototype = Object.create(AlexaSkill.prototype);
 MetrolinkSchedule.prototype.constructor = MetrolinkSchedule;
