@@ -13,10 +13,14 @@ Node 6 or above.
 ### GetNextMetrolinkFromAIntent
 
 #### Slot values:
+| Slot | Description | Example |
+| -- | -- | -- |
 | `metrostop` | departure tram stop | `piccadilly` |
 
 ### GetNextMetrolinkFromAtoBIntent
 
 #### Slot values:
+| Slot | Description | Example |
+| -- | -- | -- |
 | `metrostopA` | departure tram stop | `piccadilly` |
 | `metrostopB` | destination tram stop | `chorlton` |
