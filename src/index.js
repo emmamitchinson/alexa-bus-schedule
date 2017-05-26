@@ -10,7 +10,7 @@ var Promise         = require("bluebird");
  */
 
 var AlexaSkill      = require("./AlexaSkill")
-var metrolinkStops  = require("../speechAssets/metrolinkStops.json");
+var metrolinkStops  = require("../speechAssets/metrolinkStops-2.json");
 var metrolinkLines  = require("../speechAssets/metrolinkLines.json");
 var POSTRequestData = require("../speechAssets/AtoBIntentPOSTRequest.json");
 
@@ -29,7 +29,7 @@ else {
 * Tools
 */
 
-var getIdsByPrompt = function(prompt) {
+var getIdByPrompt = function(prompt) {
   var metrolinkStopName = prompt.value.toLowerCase();
   return metrolinkStops[metrolinkStopName];
 }
@@ -104,6 +104,7 @@ var cleanArray = function(actual) {
       var finalStopOnLine = tramInfo[i].departing_to.toLowerCase();
 
       for (j = 0; j < metrolinkLines.length; j++) {
+        console.log(metrolinkLines[j]);
         if (metrolinkLines[j].includes(destinationName, finalStopOnLine)) {
           console.log(finalStopOnLine , destinationName);
           filterResponses.push(serverResponses[i]);
@@ -148,13 +149,14 @@ var cleanArray = function(actual) {
   };
 
   var processGetNextMetrolinkFromAIntent = function(intent, session, response) {
-    var stopIds = getIdsByPrompt(intent.slots.metrostop);
+    var stopId = getIdByPrompt(intent.slots.metrostop);
 
-    if (stopIds) {
+    if (stopId) {
       var promises = [];
-      stopIds.forEach(function(stopId) {
-        promises.push(sendMetrolinkGETRequest(stopId));
-      }, this); 
+      for (i = 1; i <= 4; i++) {
+        var platformId = stopId + i;
+        promises.push(sendMetrolinkGETRequest(platformId));
+      }
       Promise.all(promises).then((requests) => {
           handleNextMetrolinkFromARequest(requests, response);
       });
@@ -164,18 +166,20 @@ var cleanArray = function(actual) {
   }
 
   var processGetNextMetrolinkFromAtoBIntent = function(intent, session, response) {
-    var departureStopIds = getIdsByPrompt(intent.slots.metrostopA);
+    var departureStopId = getIdByPrompt(intent.slots.metrostopA);
+    var destinationStopId = getIdByPrompt(intent.slots.metrostopB);
 
-    if (departureStopIds) {
+    if (departureStopId && destinationStopId) {
       var promises = [];
-      departureStopIds.forEach(function(departureStopId) {
-        promises.push(sendMetrolinkGETRequest(departureStopId));
-      }, this); 
+      for (i = 1; i <= 4; i++) {
+        var departurePlatformId = departureStopId + i;
+        promises.push(sendMetrolinkGETRequest(departurePlatformId));
+      }
       Promise.all(promises).then((requests) => {
           handleNextMetrolinkFromAtoBRequest(intent, requests, response);
       });
     } 
-    else if (departureStopIds) {
+    else if (departureStopId && !destinationStopId) {
       processGetNextMetrolinkFromAIntent(intent, session, response);
     }
     else {
