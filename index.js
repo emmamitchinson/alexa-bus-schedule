@@ -10,9 +10,8 @@ var Promise         = require("bluebird");
  */
 
 var AlexaSkill      = require("./AlexaSkill")
-var metrolinkStops  = require("../speechAssets/metrolinkStops.json");
-var metrolinkLines  = require("../speechAssets/metrolinkLines.json");
-var POSTRequestData = require("../speechAssets/AtoBIntentPOSTRequest.json");
+var metrolinkStops  = require("./dataAssets/metrolinkStops.json");
+var metrolinkLines  = require("./dataAssets/metrolinkLines.json");
 
 /**
  * Determine environment
