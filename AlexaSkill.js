@@ -16,7 +16,6 @@ AlexaSkill.prototype.requestHandlers = {
 
     SessionEndedRequest: function (event, context) {
         this.eventHandlers.onSessionEnded(event.request, event.session);
-        context.succeed();
     }
 };
 

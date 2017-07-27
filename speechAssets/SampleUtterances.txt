@@ -1,7 +1,11 @@
 GetNextMetrolinkFromAIntent get next tram from {metrostop}
 GetNextMetrolinkFromAIntent get next scheduled tram from {metrostop}
+GetNextMetrolinkFromAIntent {metrostop}
 GetNextMetrolinkFromAtoBIntent get next tram from {metrostopA} to {metrostopB}
 GetNextMetrolinkFromAtoBIntent get next scheduled tram from {metrostopA} to {metrostopB}
+GetNextMetrolinkFromAtoBIntent {metrostopA} to {metrostopB}
+GetNextMetrolinkIntent when is the next tram
+GetNextMetrolinkIntent when is the next metro
 
 HelpIntent help
 HelpIntent help me
@@ -19,4 +23,7 @@ HelpIntent what do you do
 HelpIntent how do I use you
 HelpIntent how can I use you
 HelpIntent what can you tell me
-HelpIntent how do i find a train
+
+StopIntent stop
+StopIntent exit
+StopIntent cancel

@@ -250,8 +250,16 @@
         }
       ]
     },
+        {
+      "intent": "GetNextMetrolinkIntent",
+      "slots": []
+    },
     {
       "intent": "HelpIntent",
+      "slots": []
+    },
+    {
+      "intent": "StopIntent",
       "slots": []
     }
   ]

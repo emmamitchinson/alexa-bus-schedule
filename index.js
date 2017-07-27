@@ -30,7 +30,12 @@ else {
 
 var getIdByPrompt = function(prompt) {
   var metrolinkStopName = prompt.value.toLowerCase();
-  return metrolinkStops[metrolinkStopName];
+
+  if (metrolinkStops[metrolinkStopName]) {
+    return metrolinkStops[metrolinkStopName];
+  }
+
+  return null;
 }
 
 var cleanArray = function(actual) {
@@ -41,6 +46,20 @@ var cleanArray = function(actual) {
     }
   }
   return newArray;
+}
+
+var renderEta = function(eta) {
+  if (eta == "1") {
+    return "in 1 minute";
+  } else if (eta == "0") {
+    return "now";
+  } else {
+    return "in " + eta + " minutes"
+  }
+}
+
+var renderDepartingTowards = function(finalStop) {
+  return " departing towards " + finalStop + ". ";
 }
 
 /**
@@ -64,19 +83,32 @@ var sendMetrolinkGETRequest = function(stopId) {
   });
 }
 
-var filterResponses = function(destinationName, serverResponses) {
+var filterResponses = function(departureName, destinationName, serverResponses) {
   var filterResponses = [];
 
   for (i = 0; i < serverResponses.length; i++) {
     var tramInfo = serverResponses[i].fboard_result.fboard_events;
-    var finalStopOnLine = tramInfo[i].departing_to.toLowerCase();
+    for (x = 0; x < tramInfo.length; x++) {
+      if (tramInfo[x].departing_to) {
+        var finalStopOnLine = tramInfo[x].departing_to.toLowerCase();
+      } else {
+        break;
+      }
+    }
 
     for (j = 0; j < metrolinkLines.length; j++) {
-      console.log(metrolinkLines[j]);
-      if (metrolinkLines[j].includes(destinationName, finalStopOnLine)) {
-        console.log(finalStopOnLine , destinationName);
-        filterResponses.push(serverResponses[i]);
-        break;
+      if (metrolinkLines[j].includes(departureName) && metrolinkLines[j].includes(destinationName)) {
+        if (metrolinkLines[j].indexOf(finalStopOnLine) == 0) {
+          if (metrolinkLines[j].indexOf(departureName) > metrolinkLines[j].indexOf(destinationName)) {
+            filterResponses.push(serverResponses[i]);
+            break;
+          }
+        } else if (metrolinkLines[j].indexOf(finalStopOnLine) == metrolinkLines[j].length - 1) {
+          if (metrolinkLines[j].indexOf(departureName) < metrolinkLines[j].indexOf(destinationName)) {
+            filterResponses.push(serverResponses[i]);
+            break;
+          }
+        }
       }
     }
   }
@@ -94,16 +126,17 @@ var filterResponses = function(destinationName, serverResponses) {
     var cleanedServerResponses = cleanArray(serverResponses);
 
     for (i = 0; i < cleanedServerResponses.length; i++) {
-      if (serverResponses[i]) {
-        var trams = serverResponses[i].fboard_result.fboard_events;
-        if (i == 0) {
-          cardText += "The next metro to " + trams[i].departing_to + " is in " + trams[i].eta + " minutes. ";
+      var trams = cleanedServerResponses[i].fboard_result.fboard_events;
+      for (j = 0; j < trams.length; j++) {
+        if (j == 0) {
+          cardText += "The next metro is " + renderEta(trams[j].eta) + renderDepartingTowards(trams[j].departing_to);
         }
-        else if (i == 1) {
-          cardText += "There's another metro to " + trams[i].departing_to + " in " + trams[i].eta + " minutes. ";
+        else if (j == 1) {
+          cardText += "There's another metro " + renderEta(trams[j].eta) + renderDepartingTowards(trams[j].departing_to);
         }
-        else if (i > 1) {
-          cardText += "After that there's a metro " + trams[i].departing_to + " in " + trams[i].eta + " minutes. ";
+        else if (j > 1 && cleanedServerResponses[i + 1]) {
+          cardText += "Heading in the other direction: ";
+          break;
         }
       }
     }
@@ -116,8 +149,12 @@ var filterResponses = function(destinationName, serverResponses) {
   };
 
   var processGetNextMetrolinkFromAIntent = function(intent, session, response) {
-    var stopId = getIdByPrompt(intent.slots.metrostop);
+    if (intent.slots.metrostop) {
+      var stopId = getIdByPrompt(intent.slots.metrostop);
+    } else if (intent.slots.metrostopA) {
+    var stopId = getIdByPrompt(intent.slots.metrostopA);
 
+    }
     if (stopId) {
       var promises = [];
       for (i = 1; i <= 4; i++) {
@@ -128,7 +165,7 @@ var filterResponses = function(destinationName, serverResponses) {
           handleNextMetrolinkFromARequest(requests, response);
       });
     } else {
-      response.tellWithCard("That metro stop no exist.", "", "That metro stop no exist.");
+      response.ask("Sorry I can't find that metrostop, please try again.");
     }
   }
 
@@ -142,27 +179,27 @@ var filterResponses = function(destinationName, serverResponses) {
     var destinationStopName = intent.slots.metrostopB.value;
 
     var cleanedServerResponses = cleanArray(serverResponses);
-
-    var qualifyingResponses = filterResponses(destinationStopName, cleanedServerResponses);
+    var qualifyingResponses = filterResponses(departureStopName, destinationStopName, cleanedServerResponses);
 
     for (i = 0; i < qualifyingResponses.length; i++) {
-      if (qualifyingResponses[i]) {
-        var trams = qualifyingResponses[i].fboard_result.fboard_events;
-        if (i == 0) {
-          cardText += "The next metro from " + departureStopName + " to " + destinationStopName + " is in " + trams[i].eta + " minutes. ";
+      var trams = qualifyingResponses[i].fboard_result.fboard_events;
+      for (j = 0; j < trams.length; j++) {
+        if (j == 0) {
+          cardText += "The next metro from " + departureStopName + " to " + destinationStopName + " is " + renderEta(trams[j].eta) + renderDepartingTowards(trams[j].departing_to);
         }
-        else if (i == 1) {
-          cardText += "There's another metro in " + trams[i].eta + " minutes. ";
+        else if (j == 1) {
+          cardText += "There's another metro " + renderEta(trams[j].eta) + renderDepartingTowards(trams[j].departing_to);
         }
-        else if (i > 1) {
-          console.log(i);
-          cardText += "The metro after that is in " + trams[i].eta + " minutes. ";
+        else if (j > 1) {
+          break;
         }
       }
     }
-
+    if (cardText == "" && qualifyingResponses.length > 0) {
+      cardText = "There's no direct trams between those two stops";
+    }
     if (cardText == "") {
-      cardText = "There's currently no trams running from this stop";
+      cardText = "There's no trams currently running from that stop";
     }
     
     return alexaResponse.tellWithCard(cardText, "", cardText);
@@ -186,54 +223,15 @@ var filterResponses = function(destinationName, serverResponses) {
       processGetNextMetrolinkFromAIntent(intent, session, response);
     }
     else {
-      response.tellWithCard("That metro stop no exist.", "", "That metro stop no exist.");
+      response.ask("Sorry I can't find that metrostop, please try again");
     }
   }
 
-/**
- * NextMetrolinkFromAtoB
+  var processGetNextMetrolinkIntent = function(intent, session, response) {
+      var output = "Which Metrolink stop do you want to find more about?";
 
-  var sendMetrolinkPOSTRequest = function(departureStopIds, destinationStopIds) {
-    return new Promise(function(resolve, reject) {
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("POST", "https://api.my.tfgm.com/proxy/execute?cid=optis:1&rid=getjps_v2", true);
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4) {
-          var nextTramsAsJSON = JSON.parse(xhttp.responseText);
-          if (nextTramsAsJSON.msptl_response.server_response) {
-            return resolve(nextTramsAsJSON.msptl_response.server_response);
-          }
-          return resolve(null);
-        }
-      }
-      xhttp.send(JSON.stringify(POSTRequestData));
-    });
+      response.ask(output);
   }
-
-  var handleNextMetrolinkFromAtoBRequest = function(serverResponses, alexaResponse) {
-    console.log(serverResponses);
-    return alexaResponse.tellWithCard(serverResponses, "", serverResponses);
-  }
-
-  var processGetNextMetrolinkFromAtoBIntent = function(intent, session, response) {
-      var departureStopIds = getIdsByPrompt(intent.slots.metrostopA);
-      var destinationStopIds = getIdsByPrompt(intent.slots.metrostopB);
-
-      if (departureStopIds && destinationStopIds) {
-        var promises = [];
-        departureStopIds.forEach(function(departureStopId) {
-          destinationStopIds.forEach(function(destinationStopId) {
-            promises.push(sendMetrolinkPOSTRequest(departureStopId, destinationStopId));
-          }, this); 
-        }, this);
-        Promise.all(promises).then((requests) => {
-            handleNextMetrolinkFromAtoBRequest(requests, response);
-        });
-      } else {
-        response.tellWithCard("That metro stop no exist.", "", "That metro stop no exist.");
-      }
-    }
-*/
 
 /**
 * MetrolinkSchedule
@@ -253,13 +251,18 @@ MetrolinkSchedule.prototype.eventHandlers.onSessionStarted = function(sessionSta
 
 MetrolinkSchedule.prototype.eventHandlers.onLaunch = function(launchRequest, session, response){
   var output = "Welcome to Metrolink Schedule. " +
-    "Say the name of a Metrolink stop to get how far the next Metrolink is away.";
+    "Say the name of a Metrolink stop to find out when the next metrolink will arrive.";
 
-  var reprompt = "Which Metrolink stop do you want to find more about?";
+  var reprompt = "Which Metrolink stop are you travelling from?";
 
   response.ask(output, reprompt);
 
   console.log("onLaunch requestId: " + launchRequest.requestId
+      + ", sessionId: " + session.sessionId);
+};
+
+MetrolinkSchedule.prototype.eventHandlers.onSessionEnded = function(sessionEndedRequest, session){
+  console.log("onSessionEnded requestId: " + sessionEndedRequest.requestId
       + ", sessionId: " + session.sessionId);
 };
 
@@ -272,9 +275,12 @@ MetrolinkSchedule.prototype.intentHandlers = {
     processGetNextMetrolinkFromAIntent(intent, session, response);
   },
 
+  GetNextMetrolinkIntent: function(intent, session, response){
+    processGetNextMetrolinkIntent(intent, session, response);
+  },
+
   HelpIntent: function(intent, session, response){
-    var speechOutput = "Get the distance from arrival for any Metrolink stop. " +
-      "Which Metrolink stop would you like?";
+    var speechOutput = "Get the tram times for any Metrolink stop. Which Metrolink stop would you like?";
     response.ask(speechOutput);
   }
 };
