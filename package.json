@@ -1,6 +1,6 @@
 {
   "name": "alexa-metrolink-time",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "An Amazon Echo Skill that uses the TfGM Metrolink API to fetch the next trams for a given stop.",
   "main": "index.js",
   "author": "Emma Mitchinson",

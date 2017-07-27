@@ -262,6 +262,7 @@ MetrolinkSchedule.prototype.eventHandlers.onLaunch = function(launchRequest, ses
 };
 
 MetrolinkSchedule.prototype.eventHandlers.onSessionEnded = function(sessionEndedRequest, session){
+  var speechOutput = "Okay bye.";
   console.log("onSessionEnded requestId: " + sessionEndedRequest.requestId
       + ", sessionId: " + session.sessionId);
 };
@@ -282,6 +283,11 @@ MetrolinkSchedule.prototype.intentHandlers = {
   HelpIntent: function(intent, session, response){
     var speechOutput = "Get the tram times for any Metrolink stop. Which Metrolink stop would you like?";
     response.ask(speechOutput);
+  },
+
+  StopIntent: function(intent, session, response){
+    var speechOutput = "Okay bye.";
+    response.tell(speechOutput);
   }
 };
 
