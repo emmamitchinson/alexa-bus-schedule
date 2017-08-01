@@ -268,24 +268,39 @@ MetrolinkSchedule.prototype.eventHandlers.onSessionEnded = function(sessionEnded
 };
 
 MetrolinkSchedule.prototype.intentHandlers = {
-  GetNextMetrolinkFromAtoBIntent: function(intent, session, response){
+  "GetNextMetrolinkFromAtoBIntent": function(intent, session, response){
     processGetNextMetrolinkFromAtoBIntent(intent, session, response);
   },
 
-  GetNextMetrolinkFromAIntent: function(intent, session, response){
+  "GetNextMetrolinkFromAIntent": function(intent, session, response){
     processGetNextMetrolinkFromAIntent(intent, session, response);
   },
 
-  GetNextMetrolinkIntent: function(intent, session, response){
+  "GetNextMetrolinkIntent": function(intent, session, response){
     processGetNextMetrolinkIntent(intent, session, response);
   },
 
-  HelpIntent: function(intent, session, response){
+  "HelpIntent": function(intent, session, response){
     var speechOutput = "Get the tram times for any Metrolink stop. Which Metrolink stop would you like?";
     response.ask(speechOutput);
   },
 
-  StopIntent: function(intent, session, response){
+  "StopIntent": function(intent, session, response){
+    var speechOutput = "Okay bye.";
+    response.tell(speechOutput);
+  },
+
+  "AMAZON.HelpIntent": function(intent, session, response){
+    var speechOutput = "Get the tram times for any Metrolink stop. Which Metrolink stop would you like?";
+    response.ask(speechOutput);
+  },
+
+  "AMAZON.StopIntent": function(intent, session, response){
+    var speechOutput = "Okay bye.";
+    response.tell(speechOutput);
+  },
+
+  "AMAZON.CancelIntent": function(intent, session, response){
     var speechOutput = "Okay bye.";
     response.tell(speechOutput);
   }
